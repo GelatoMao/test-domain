@@ -1,0 +1,15 @@
+apiVersion: ebay/v1alpha1
+kind: Deployment
+metadata:
+  name: domain-resolve
+  namespace: bdpns
+  ## Label Addition
+  annotations:
+    application.tess.io/name: sentapp1
+    applicationinstance.tess.io/name: sentapp1-deployment-in-staging
+spec:
+  replicas: 1
+  containers:
+    - image: hub.tess.io/adihadoop/bdp-nginx:latest-dev 
+      imagePullPolicy: Always
+      name: bdpDomain

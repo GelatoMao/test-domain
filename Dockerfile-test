@@ -1,0 +1,12 @@
+FROM hub.tess.io/adihadoop/bdp-nginx:latest-production
+USER root # 是谁
+# 镜像操作
+# RUN mkdir -p /root/testdomain
+# WORKDIR /root/testdomain
+# RUN apt update && apt install -y dnsutils
+# COPY ./reload-nginx.sh /root/testdomain/reload-nginx.sh
+# COPY ./domain.txt /root/testdomain/domain.txt
+COPY ./reload-nginx.sh /bdp/reload-nginx.sh
+COPY ./bdpDomain.txt /bdp/bdpDomain.txt
+COPY ./clear.sh /bdp/clear.sh
+# CMD ["./reload-nginx.sh", "-f", "bdpDomain.txt"]

@@ -1,0 +1,6 @@
+bdp.vip.ebay.com
+hmcschedulersvc-prod-staging.hmcns.svc.84.tess.io
+delos-server-preprod-tess0028.stratus.rno.ebay.com
+hms-asset00450707.stratus.lvs.ebay.com
+workspaces-qa-api.vip.ebay.com
+woody-staging.vip.ebay.com

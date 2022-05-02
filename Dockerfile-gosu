@@ -1,0 +1,44 @@
+# Image Name:
+#   hub.tess.io/adihadoop/bdp-nginx:v0.0.1
+FROM hub.tess.io/adihadoop/alex-base-image:latest
+RUN apt update && apt install -y nginx
+RUN touch /var/log/nginx/access.log; \
+ touch /var/log/nginx/error.log; \
+ touch /run/nginx.pid; \
+ chmod 777 /run/nginx.pid \
+ mkdir -p /var/lib/nginx/body; \
+ mkdir -p /var/lib/nginx/fastcgi; \
+ mkdir -p /var/lib/nginx/proxy; \
+ mkdir -p /var/lib/nginx/scgi; \
+ mkdir -p /var/lib/nginx/uwsgi;
+
+RUN apt-get update && apt install -y cron 
+RUN echo "* * * * * . /etc/profile;/bin/sh /bdp/clear-logs.sh > /dev/null 2>&1" >> /var/spool/cron/crontabs/root
+RUN chown -R root:crontab /var/spool/cron/crontabs/root \
+  && chmod 600 /var/spool/cron/crontabs/root
+
+RUN wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/1.7/gosu-amd64" \
+&& chmod +x /usr/local/bin/gosu \
+&& gosu nobody true
+
+RUN groupadd -g 70375 bdpai
+RUN useradd -u 69760 -g bdpai bdpai
+
+USER 69760
+
+# Config copied from Jenkins
+# COPY certs
+# COPY ./config/certs /etc/certs/
+# COPY ./config/default.nginx.conf /etc/nginx/sites-enabled/default
+# COPY ./config/nginx.conf /etc/nginx/nginx.conf
+# COPY ./config/bdpDomain.txt /bdp/bdpDomain.txt
+# COPY ./start-nginx.sh /bdp/start-nginx.sh
+# COPY ./reload-nginx.sh /bdp/reload-nginx.sh
+# COPY ./clear-logs.sh /bdp/clear-logs.sh
+COPY ./clear.sh /bdp/clear.sh
+
+WORKDIR /bdp
+
+EXPOSE 8080
+EXPOSE 4430
+CMD ["exec","gosu","69760","/bdp/clear.sh"]
